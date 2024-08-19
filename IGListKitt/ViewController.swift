@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import IGListKit
 
 class ViewController: UIViewController {
+    
+    private var adapter: ListAdapter?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +26,13 @@ class ViewController: UIViewController {
         //IGListKit
           
         let collectionView = createCollectionView()
+        
+        let updater = ListAdapterUpdater()
+        let adapter = ListAdapter(updater: updater, viewController: self)
+        adapter.collectionView = collectionView
+        adapter.dataSource = self
+        
+        self.adapter = adapter
           
     }
       
@@ -47,3 +57,19 @@ class ViewController: UIViewController {
 
 }
 
+extension ViewController: ListAdapterDataSource {
+    func objects(for listAdapter: ListAdapter) -> [any ListDiffable] {
+        let data: [NSString] = ["Apple", "Facebook", "Google", "Amazon"]
+        return data
+    }
+    
+    func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
+        return LabelSectionController()
+    }
+    
+    func emptyView(for listAdapter: ListAdapter) -> UIView? {
+        return nil
+    }
+    
+    
+}
